@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>디지털 명함첩</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>디지털 명함첩</h1>
+
+        <div class="add-form">
+            <h2>새 명함 추가</h2>
+            <form action="/" method="POST" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="이름 (필수)" required>
+                <input type="text" name="company" placeholder="회사">
+                <input type="text" name="title" placeholder="직책">
+                <input type="text" name="phone" placeholder="연락처">
+                <input type="email" name="email" placeholder="이메일">
+
+                <label for="logo-upload" class="file-upload-label">
+                    <i class="fa-solid fa-upload"></i> 로고 파일 선택
+                </label>
+                <input type="file" name="logo" id="logo-upload" accept="image/png, image/jpeg, image/gif">
+                <span id="file-name-display">선택된 파일 없음</span>
+
+                <button type="submit">추가하기</button>
+            </form>
+        </div>
+
+        <h2>저장된 명함 목록</h2>
+        <ul class="card-grid">
+            {% for card in cards %}
+                <li class="card-item">
+                    <a href="/delete/{{ card.id }}" class="delete-btn" title="삭제">&times;</a>
+
+                    <img class="card-image"
+                         src="{{ url_for('generate_card_image', id=card.id) }}"
+                         alt="{{ card.name }}의 명함">
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        // 파일 선택 시 파일명 표시
+        document.getElementById('logo-upload').addEventListener('change', function() {
+            const fileNameDisplay = document.getElementById('file-name-display');
+            if (this.files && this.files.length > 0) {
+                fileNameDisplay.textContent = this.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '선택된 파일 없음';
+            }
+        });
+    </script>
+</body>
+</html>
